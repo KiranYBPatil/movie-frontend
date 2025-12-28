@@ -67,55 +67,54 @@ export default function AIAssistant() {
 
 const styles = {
   box: {
-    width: 360,
-    height: 520,
+    width: "100vw",
+    height: "100vh",
     background: "#121212",
     color: "#fff",
-    borderRadius: 12,
     display: "flex",
-    flexDirection: "column",
-    position: "fixed",
-    bottom: 20,
-    right: 20,
-    boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
+    flexDirection: "column"
   },
   header: {
     background: "#e50914",
-    padding: 12,
+    padding: 16,
     textAlign: "center",
-    fontWeight: "bold"
+    fontWeight: "bold",
+    fontSize: 20
   },
   chat: {
     flex: 1,
-    padding: 10,
+    padding: 16,
     display: "flex",
     flexDirection: "column",
-    gap: 8,
+    gap: 10,
     overflowY: "auto"
   },
   msg: {
-    maxWidth: "75%",
-    padding: 10,
-    borderRadius: 14,
-    fontSize: 14
+    maxWidth: "70%",
+    padding: 12,
+    borderRadius: 16,
+    fontSize: 15
   },
   inputBar: {
     display: "flex",
-    padding: 10
+    padding: 12,
+    borderTop: "1px solid #333"
   },
   input: {
     flex: 1,
-    padding: 10,
-    borderRadius: 20,
-    border: "none"
+    padding: 12,
+    borderRadius: 24,
+    border: "none",
+    fontSize: 15
   },
   btn: {
-    marginLeft: 8,
+    marginLeft: 10,
     background: "#e50914",
     color: "#fff",
-    borderRadius: 20,
+    borderRadius: 24,
     border: "none",
-    padding: "10px 16px",
-    cursor: "pointer"
+    padding: "12px 20px",
+    cursor: "pointer",
+    fontWeight: "bold"
   }
 };
