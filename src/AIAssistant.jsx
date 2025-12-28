@@ -1,126 +1,143 @@
 import { useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function AIAssistant() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [typing, setTyping] = useState(false);
+  const [loading, setLoading] = useState(false);
 
- const sendMessage = async () => {
-  if (!input.trim()) return;
+  async function sendMessage() {
+    if (!input.trim()) return;
 
-  const userMessage = { role: "user", text: input };
-  setMessages((prev) => [...prev, userMessage]);
-  setInput("");
-  setTyping(true);
+    const userText = input;
 
-  try {
-    const res = await fetch("http://127.0.0.1:8000/ask", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: userMessage.text }),
-    });
+    setMessages(prev => [...prev, { role: "user", text: userText }]);
+    setInput("");
+    setLoading(true);
 
-    if (!res.ok) throw new Error("API error");
+    try {
+      const res = await fetch(`${API_URL}/ask`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ question: userText })
+      });
 
-    const data = await res.json();
+      if (!res.ok) throw new Error("API failed");
 
-    setMessages((prev) => [
-      ...prev,
-      { role: "ai", text: data.answer },
-    ]);
-  } catch (error) {
-    // 🔕 Silent fail (no ugly message)
-    setMessages((prev) => [
-      ...prev,
-      { role: "ai", text: "⚠️ Please try again..." },
-    ]);
+      const data = await res.json();
+
+      setMessages(prev => [
+        ...prev,
+        { role: "ai", text: data.answer }
+      ]);
+    } catch (err) {
+      setMessages(prev => [
+        ...prev,
+        { role: "ai", text: "⚠️ AI is temporarily unavailable" }
+      ]);
+    }
+
+    setLoading(false);
   }
 
-  setTyping(false);
-};
-
-
   return (
-    <div style={{ padding: "20px", background: "#121212", minHeight: "100vh" }}>
-      <h2 style={{ color: "#e50914", textAlign: "center" }}>
-        🎬 Movie AI Assistant
-      </h2>
+    <div style={styles.box}>
+      <div style={styles.header}>🎬 Movie AI Assistant</div>
 
-      <iframe
-        src="https://patilkiran-movie-rag-ai.hf.space"
-        width="100%"
-        height="600"
-        style={{
-          border: "none",
-          borderRadius: "10px",
-          marginTop: "20px",
-          background: "#fff",
-        }}
-        title="Movie RAG AI"
-      />
+      <div style={styles.chat}>
+        {messages.map((m, i) => (
+          <div
+            key={i}
+            style={{
+              ...styles.msg,
+              alignSelf: m.role === "user" ? "flex-end" : "flex-start",
+              background: m.role === "user" ? "#e50914" : "#333"
+            }}
+          >
+            {m.text}
+          </div>
+        ))}
+
+        {loading && (
+          <div style={{ ...styles.msg, background: "#333" }}>
+            Typing...
+          </div>
+        )}
+      </div>
+
+      <div style={styles.inputBar}>
+        <input
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          placeholder="Ask about booking, seats, snacks..."
+          style={styles.input}
+          onKeyDown={e => e.key === "Enter" && sendMessage()}
+        />
+        <button onClick={sendMessage} style={styles.btn}>
+          Send
+        </button>
+      </div>
     </div>
   );
 }
 
-
-
 const styles = {
-  container: {
-    height: "100vh",
+  box: {
+    width: 360,
+    height: 520,
+    background: "#121212",
+    color: "#fff",
+    borderRadius: 12,
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "#121212",
-    color: "#fff",
-    fontFamily: "Arial",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.6)"
   },
   header: {
-    padding: "15px",
+    background: "#e50914",
+    padding: 12,
     textAlign: "center",
-    backgroundColor: "#e50914",
-    fontSize: "18px",
     fontWeight: "bold",
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12
   },
-  chatArea: {
+  chat: {
     flex: 1,
-    padding: "15px",
+    padding: 10,
     display: "flex",
     flexDirection: "column",
-    gap: "10px",
-    overflowY: "auto",
+    gap: 8,
+    overflowY: "auto"
   },
-  message: {
-    maxWidth: "70%",
-    padding: "12px",
-    borderRadius: "18px",
-    fontSize: "14px",
-    lineHeight: "1.4",
+  msg: {
+    maxWidth: "75%",
+    padding: 10,
+    borderRadius: 14,
+    fontSize: 14,
+    lineHeight: "1.4"
   },
-  typing: {
-    backgroundColor: "#333",
-    fontStyle: "italic",
-    alignSelf: "flex-start",
-  },
-  inputArea: {
+  inputBar: {
     display: "flex",
-    padding: "10px",
-    borderTop: "1px solid #333",
+    padding: 10,
+    borderTop: "1px solid #222"
   },
   input: {
     flex: 1,
-    padding: "10px",
-    borderRadius: "20px",
+    padding: 10,
+    borderRadius: 20,
     border: "none",
-    outline: "none",
-    fontSize: "14px",
+    outline: "none"
   },
-  button: {
-    marginLeft: "10px",
-    padding: "10px 16px",
-    borderRadius: "20px",
-    border: "none",
-    backgroundColor: "#e50914",
+  btn: {
+    marginLeft: 8,
+    background: "#e50914",
     color: "#fff",
+    borderRadius: 20,
+    border: "none",
+    padding: "10px 16px",
     cursor: "pointer",
-    fontWeight: "bold",
-  },
+    fontWeight: "bold"
+  }
 };
