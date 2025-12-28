@@ -88,57 +88,71 @@ const styles = {
   page: {
     width: "100vw",
     height: "100vh",
-    background: "#0f0f0f",
+    background: "linear-gradient(180deg, #0b0b0b, #121212)",
     color: "#fff",
     display: "flex",
     flexDirection: "column",
-    fontFamily: "Arial, sans-serif"
+    fontFamily: "'Inter', Arial, sans-serif"
   },
+
   header: {
-    background: "#e50914",
-    padding: "16px",
+    background: "linear-gradient(90deg, #e50914, #b20710)",
+    padding: "18px",
     textAlign: "center",
-    fontSize: "20px",
-    fontWeight: "bold",
-    letterSpacing: "0.5px"
+    fontSize: "22px",
+    fontWeight: "700",
+    letterSpacing: "0.6px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.4)"
   },
+
   chatArea: {
     flex: 1,
-    padding: "16px",
+    padding: "24px",
     display: "flex",
     flexDirection: "column",
-    gap: "10px",
+    gap: "14px",
     overflowY: "auto"
   },
+
   message: {
-    maxWidth: "75%",
-    padding: "12px 16px",
-    borderRadius: "18px",
+    maxWidth: "70%",
+    padding: "14px 18px",
+    borderRadius: "20px",
     fontSize: "15px",
-    lineHeight: "1.4"
+    lineHeight: "1.5",
+    boxShadow: "0 6px 16px rgba(0,0,0,0.35)",
+    backdropFilter: "blur(6px)"
   },
+
   inputBar: {
     display: "flex",
-    padding: "12px",
-    borderTop: "1px solid #333",
-    background: "#0f0f0f"
+    padding: "14px",
+    borderTop: "1px solid #2a2a2a",
+    background: "rgba(15,15,15,0.95)",
+    backdropFilter: "blur(8px)"
   },
+
   input: {
     flex: 1,
-    padding: "12px 16px",
-    borderRadius: "24px",
+    padding: "14px 18px",
+    borderRadius: "30px",
     border: "none",
     outline: "none",
-    fontSize: "15px"
+    fontSize: "15px",
+    background: "#1f1f1f",
+    color: "#fff"
   },
+
   button: {
-    marginLeft: "10px",
-    padding: "12px 20px",
-    borderRadius: "24px",
+    marginLeft: "12px",
+    padding: "14px 24px",
+    borderRadius: "30px",
     border: "none",
-    background: "#e50914",
+    background: "linear-gradient(135deg, #e50914, #ff2a2a)",
     color: "#fff",
-    fontWeight: "bold",
-    cursor: "pointer"
+    fontWeight: "700",
+    cursor: "pointer",
+    boxShadow: "0 6px 16px rgba(229,9,20,0.5)"
   }
 };
+
