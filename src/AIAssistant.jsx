@@ -10,34 +10,23 @@ export default function AIAssistant() {
   async function sendMessage() {
     if (!input.trim()) return;
 
-    const userText = input;
-
-    setMessages(prev => [...prev, { role: "user", text: userText }]);
+    setMessages(m => [...m, { role: "user", text: input }]);
     setInput("");
     setLoading(true);
 
     try {
       const res = await fetch(`${API_URL}/ask`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ question: userText })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: input })
       });
 
-      if (!res.ok) throw new Error("API failed");
+      if (!res.ok) throw new Error("API error");
 
       const data = await res.json();
-
-      setMessages(prev => [
-        ...prev,
-        { role: "ai", text: data.answer }
-      ]);
+      setMessages(m => [...m, { role: "ai", text: data.answer }]);
     } catch (err) {
-      setMessages(prev => [
-        ...prev,
-        { role: "ai", text: "⚠️ AI is temporarily unavailable" }
-      ]);
+      setMessages(m => [...m, { role: "ai", text: "⚠️ AI is temporarily unavailable" }]);
     }
 
     setLoading(false);
@@ -60,12 +49,7 @@ export default function AIAssistant() {
             {m.text}
           </div>
         ))}
-
-        {loading && (
-          <div style={{ ...styles.msg, background: "#333" }}>
-            Typing...
-          </div>
-        )}
+        {loading && <div style={styles.msg}>Typing...</div>}
       </div>
 
       <div style={styles.inputBar}>
@@ -74,11 +58,8 @@ export default function AIAssistant() {
           onChange={e => setInput(e.target.value)}
           placeholder="Ask about booking, seats, snacks..."
           style={styles.input}
-          onKeyDown={e => e.key === "Enter" && sendMessage()}
         />
-        <button onClick={sendMessage} style={styles.btn}>
-          Send
-        </button>
+        <button onClick={sendMessage} style={styles.btn}>Send</button>
       </div>
     </div>
   );
@@ -93,15 +74,16 @@ const styles = {
     borderRadius: 12,
     display: "flex",
     flexDirection: "column",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.6)"
+    position: "fixed",
+    bottom: 20,
+    right: 20,
+    boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
   },
   header: {
     background: "#e50914",
     padding: 12,
     textAlign: "center",
-    fontWeight: "bold",
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12
+    fontWeight: "bold"
   },
   chat: {
     flex: 1,
@@ -115,20 +97,17 @@ const styles = {
     maxWidth: "75%",
     padding: 10,
     borderRadius: 14,
-    fontSize: 14,
-    lineHeight: "1.4"
+    fontSize: 14
   },
   inputBar: {
     display: "flex",
-    padding: 10,
-    borderTop: "1px solid #222"
+    padding: 10
   },
   input: {
     flex: 1,
     padding: 10,
     borderRadius: 20,
-    border: "none",
-    outline: "none"
+    border: "none"
   },
   btn: {
     marginLeft: 8,
@@ -137,7 +116,6 @@ const styles = {
     borderRadius: 20,
     border: "none",
     padding: "10px 16px",
-    cursor: "pointer",
-    fontWeight: "bold"
+    cursor: "pointer"
   }
 };
